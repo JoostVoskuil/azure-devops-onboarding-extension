@@ -1,0 +1,54 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "id",
+    "name": "azure-devops-onboarding",
+    "friendlyName": "Azure DevOps onboarding",
+    "description": "Task to onboard projects and teams.",
+    "category": "Utility",
+    "author": "author",
+    "version": {
+        "Major": 0,
+        "Minor": 7,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Azure DevOps onboarding",
+    "inputs": [
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "options": {
+              "onboardProject": "Onboard Project",
+              "onboardTeam": "Onboard Team"
+            },
+            "required": true
+        },
+        {
+            "name": "ProjectName",
+            "type": "string",
+            "label": "Project Name",
+            "defaultValue": "",
+            "required": false
+        },
+        {
+            "name": "TeamName",
+            "type": "string",
+            "label": "Team Name",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "Action = onboardTeam"
+        },
+        {
+            "name": "Description",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "required": true
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}

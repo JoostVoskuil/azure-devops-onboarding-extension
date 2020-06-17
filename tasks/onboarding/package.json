@@ -1,0 +1,24 @@
+{
+  "name": "azure-devops-onboarding-extension-onboarding",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "author",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^14.0.13",
+    "azure-devops-node-api": "^10.1.1",
+    "azure-devops-onboarding": "1.0.3",
+    "azure-pipelines-task-lib": "^2.9.5",
+    "typescript-logging": "^0.6.4"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.5",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.9.5"
+  }
+}

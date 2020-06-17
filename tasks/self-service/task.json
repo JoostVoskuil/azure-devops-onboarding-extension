@@ -1,0 +1,122 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "id",
+    "name": "azure-devops-self-service",
+    "friendlyName": "Azure DevOps Self Service",
+    "description": "Task to self-service for teams.",
+    "category": "Utility",
+    "author": "author",
+    "version": {
+        "Major": 0,
+        "Minor": 7,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Azure DevOps Self Service",
+    "inputs": [
+        {
+            "name": "Action",
+            "type": "pickList",
+            "label": "Action",
+            "options": {
+              "onboardProduct": "Onboard Product",
+              "onboardTeamToProduct": "Onboard Team to a Product",
+              "onboardApprovalGroup": "Create Approval Group",
+              "onboardInnerSourceTeamOnProduct": "Innersource team on product in different project",
+              "hardenVariableGroup": "Harden Variable Group.",
+              "hardenGitRepository": "Harden Git Repository.",
+              "hardenEnvironment": "Harden Environment.",
+              "hardenServiceConnection": "Harden Service Connection.",
+              "hardenDeploymentGroup": "Harden Deployment Group."
+            },
+            "required": true
+        },
+        {
+            "name": "ProjectName",
+            "type": "string",
+            "label": "Project Name",
+            "defaultValue": "",
+            "required": true
+        },
+        {
+            "name": "ProductName",
+            "type": "string",
+            "label": "Product Name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardProduct || Action = onboardTeamToProduct || Action = onboardApprovalGroup || Action = onboardInnerSourceTeamOnProduct"
+        },
+        {
+            "name": "TeamName",
+            "type": "string",
+            "label": "Team Name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardTeamToProduct"
+        },
+        {
+            "name": "Description",
+            "type": "string",
+            "label": "Description",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardApprovalGroup || Action = onboardProduct"
+        },
+        {
+            "name": "ApprovalName",
+            "type": "string",
+            "label": "Approval Name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardApprovalGroup"
+        },
+        {
+            "name": "SourceProjectName",
+            "type": "string",
+            "label": "Source Project Name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardInnerSourceTeamOnProduct"
+        },
+        {
+            "name": "SourceTeamName",
+            "type": "string",
+            "label": "Source Team Name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = onboardInnerSourceTeamOnProduct"
+        },
+        {
+            "name": "ObjectName",
+            "type": "string",
+            "label": "Object Name (Git repo, Environment, Service Conncetion, Deployment Group",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = hardenVariableGroup || Action = hardenGitRepository || Action = hardenEnvironment || Action = hardenServiceConnection || Action = hardenDeploymentGroup"
+        },
+        {
+            "name": "GroupName",
+            "type": "string",
+            "label": "Team or Product name",
+            "defaultValue": "",
+            "required": true,
+            "visibleRule": "Action = hardenVariableGroup || Action = hardenGitRepository || Action = hardenEnvironment || Action = hardenServiceConnection || Action = hardenDeploymentGroup"
+        },
+        {
+            "name": "GroupType",
+            "type": "pickList",
+            "label": "Object Name (Git repo, Environment, Service Conncetion, Deployment Group",
+            "options": {
+              "product": "Product",
+              "team": "Team",
+            "defaultValue": "Product",
+            "required": true,
+            "visibleRule": "Action = hardenVariableGroup || Action = hardenGitRepository || Action = hardenEnvironment || Action = hardenServiceConnection || Action = hardenDeploymentGroup"
+        }
+    }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "index.js"
+        }
+    }
+}

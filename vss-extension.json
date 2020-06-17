@@ -1,0 +1,56 @@
+{
+    "manifestVersion": 1,
+    "id": "#{id}#",
+    "name": "#{name}#",
+    "publisher": "#{publisher}#",
+    "description": "This extension provides Azure DevOps Tasks for Onboarding and Self-Service.",
+    "version": "#{Build.BuildNumber}#",
+    "public": false,
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "#{gitrepo}#"
+    },
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "files": [
+        {
+            "path": "tasks/onboarding"
+        },
+        {
+            "path": "tasks/self-service"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "azure-devops-onboarding",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/onboarding"
+            }
+        },
+        {
+            "id": "azure-devops-self-service",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "tasks/self-service"
+            }
+        }
+    ]
+}

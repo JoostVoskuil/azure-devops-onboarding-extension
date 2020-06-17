@@ -1,0 +1,30 @@
+{
+    "name": "Onboarding Extension",
+    "description": "",
+    "variables": {
+        "Extension_account": {
+            "value": "foxholenl"
+        },
+        "Extension_extensionId": {
+            "value": "foxhole-azure-devops-onboarding"
+        },
+        "Extension_extensionName": {
+            "value": "Foxhole Azure DevOps Onboarding Tasks"
+        },
+        "Extension_publisherId": {
+            "value": "foxholenl"
+        },
+        "Task_Author": {
+            "value": "Foxhole NL"
+        },
+        "Task_Onboarding_Guid": {
+            "value": "<generate new guid>"
+        },
+        "Task_Self_Service_Guid": {
+            "value": "<generate new guid>"
+        },
+        "gitRepo": {
+            "value": "https://github.com/JoostVoskuil/azure-devops-onboarding-extension"
+        }
+    }
+}

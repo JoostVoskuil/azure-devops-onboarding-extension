@@ -1,0 +1,100 @@
+name: $(major).$(minor).$(rev:r)
+
+trigger:
+- master
+
+variables:
+- name: major
+  value: 0
+- name: minor
+  value: 7
+- group: Onboarding Extension
+
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        customCommand: 'install --only=prod'
+        workingDir: '$(Pipeline.Workspace)/s/tasks/onboarding'
+      displayName: 'npm install onboarding'
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        customCommand: 'install --only=prod'
+        workingDir: '$(Pipeline.Workspace)/s/tasks/self-service'
+      displayName: 'npm install self-service'
+    - task: WhiteSource Bolt@20
+      displayName: 'Dependency Scanning with WhiteSource Bolt'
+    - script: |
+        cd tasks/onboarding
+        sed -i '/id/c\   \"id\" : \"$(Task_Onboarding_Guid)\",' task.json
+        sed -i '/author/c\   \"author\" : \"$(Task_Author)\",' task.json
+        sed -i '/Patch/c\   \"Patch\" : \"$(Build.BuildID)\"' task.json
+        sed -i '/author/c\   \"author\" : \"$(Task_Author)\",' package.json
+      displayName: 'Patch onboarding task task.json and package.json'
+    - script: |
+        cd tasks/onboarding
+        rm -f package-lock.json
+      displayName: 'Cleaning'
+    - script: |
+        cd tasks/self-service
+        sed -i '/id/c\   \"id\" : \"$(Task_Self_Service_Guid)\",' task.json
+        sed -i '/author/c\   \"author\" : \"$(Task_Author)\",' task.json
+        sed -i '/Patch/c\   \"Patch\" : \"$(Build.BuildID)\"' task.json
+        sed -i '/author/c\   \"author\" : \"$(Task_Author)\",' package.json
+      displayName: 'Patch self-service task task.json and package.json'
+    - script: |
+        cd tasks/onboarding
+        rm -f package-lock.json
+      displayName: 'Cleaning'
+    - script: |
+        sed -i '/#{id}#"/c\   \"id\" : \"$(Extension_extensionId)\",' vss-extension.json
+        sed -i '/#{name}#/c\   \"name\" : \"$(Extension_extensionName)\",' vss-extension.json
+        sed -i '/#{publisher}#/c\   \"publisher\" : \"$(Extension_publisherId)\",' vss-extension.json
+        sed -i '/#{gitrepo}#/c\   \"uri\" : \"$(gitrepo)\"' vss-extension.json
+      displayName: 'Edit vss-extension.json'  
+    - script: |
+        cd tasks/onboarding
+        tsc
+      displayName: 'Build Onboarding Task'
+    - script: |
+        cd tasks/self-service
+        tsc
+      displayName: 'Build Self-Service Task'
+    - task: TfxInstaller@3
+      inputs:
+        version: 'v0.7.x'
+    - script: |
+        tfx extension create --manifest-globs vss-extension.json --output-path $(Build.ArtifactStagingDirectory)/azure-devops-onboarding.vsix --override "{ \"version\": \"$(Build.BuildNumber)\" }"
+      displayName: 'Create Extension'
+    - task: PublishAzureDevOpsExtension@3
+      inputs:
+        connectTo: 'VsTeam'
+        connectedServiceName: 'Marketplace'
+        fileType: 'vsix'
+        vsixFile: '$(Build.ArtifactStagingDirectory)/azure-devops-onboarding.vsix'
+        publisherId: '$(Extension_publisherId)'
+        extensionId: '$(Extension_extensionId)'
+        extensionName: '$(Extension_extensionName)'
+        extensionVersion: '$(Build.BuildNumber)'
+    - task: ShareAzureDevOpsExtension@3
+      inputs:
+        connectTo: 'VsTeam'
+        connectedServiceName: 'Marketplace'
+        method: 'id'
+        publisherId: '$(Extension_publisherId)'
+        extensionId: '$(Extension_extensionId)'
+        accounts: '$(Extension_account)'
+    - task: InstallAzureDevOpsExtension@3
+      inputs:
+        connectTo: 'VsTeam'
+        connectedServiceName: 'Marketplace'
+        method: 'id'
+        publisherId: '$(Extension_publisherId)'
+        extensionId: '$(Extension_extensionId)'
+        accounts: 'https://dev.azure.com/$(Extension_account)'
